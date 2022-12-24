@@ -17,7 +17,7 @@ export const TaskHeader: FC<ITaskHeader> = (
       display="flex"
       width="100%"
       justifyContent="space-between"
-      mb={3}
+      mb={1}
     >
       <Box>
         <Typography variant="h6">{title}</Typography>

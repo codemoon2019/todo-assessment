@@ -5,23 +5,22 @@ import { Task } from '../task/task';
 import { TaskCounter } from '../taskCounter/taskCounter';
 import { format } from 'date-fns';
 
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
+import {  useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 import { ITask } from '../task/interfaces/ITask';
+import { Status } from '../createTaskForm/enums/Status';
 
 
 export const TaskArea: FC = (): ReactElement => {
 
 
   const taskList = useSelector((state: RootState) => state);
-  const dispatch = useDispatch<AppDispatch>();
   
-  console.log(dispatch)
-
+  
   return (
     <Grid item md={8} px={4}>
-      <Box mb={8} px={4}>
+      <Box mb={3} px={4} sx={{textAlign:'center'}}>
         <h2>
           Status Of Your Tasks As On{' '}
           {format(new Date(), 'PPPP')}
@@ -40,11 +39,11 @@ export const TaskArea: FC = (): ReactElement => {
           alignItems="center"
           md={10}
           xs={12}
-          mb={8}
+          mb={4}
         >
-          <TaskCounter />
-          <TaskCounter />
-          <TaskCounter />
+          <TaskCounter status={Status.todo} count={taskList.filter((task)=>task.status ==Status.todo).length}/>
+          <TaskCounter status={Status.inProgress} count={taskList.filter((task)=>task.status ==Status.inProgress).length}/>
+          <TaskCounter status={Status.completed} count={taskList.filter((task)=>task.status ==Status.completed).length}/>
         </Grid>
         <Grid
           item
@@ -54,7 +53,7 @@ export const TaskArea: FC = (): ReactElement => {
           md={8}
         >
           {taskList.map((task:ITask, idx:number) => (
-            <Task key={idx} title={task.title} date={task.date} description={task.description} status={task.status} priority={task.priority}/>
+            <Task key={idx} id={task.id} title={task.title} date={task.date} description={task.description} status={task.status} priority={task.priority}/>
           ))
           }
         </Grid>

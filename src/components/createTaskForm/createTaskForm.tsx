@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, Button } from '@mui/material';
+import { Box, Stack, Typography, Button,SelectChangeEvent} from '@mui/material';
 import React, { useState, FC, ReactElement } from 'react';
 
 import { Priority } from './enums/Priority';
@@ -18,7 +18,8 @@ import { ITask } from "../task/interfaces/ITask";
 
 export const CreateTaskForm: FC = (): ReactElement => {
 
-  const [states, setStates] = useState<ITask>({})
+  const [states, setStates] = useState<ITask>({title:"Title Of Task", 
+                     description:"Task Description", status:Status.todo, priority:Priority.normal})
   const dispatch = useDispatch<AppDispatch>();
 
   const handleTitleChange = (
@@ -48,6 +49,16 @@ export const CreateTaskForm: FC = (): ReactElement => {
     });
   };
 
+  const handleSelectChange = (
+    e: SelectChangeEvent
+  ) => {
+    
+    setStates({
+      ...states,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <Box
       display="flex"
@@ -74,6 +85,8 @@ export const CreateTaskForm: FC = (): ReactElement => {
           <TaskSelectField
             label="Status"
             name="status"
+            value={states.status}
+            onChange={handleSelectChange}
             items={[
               {
                 value: Status.todo,
@@ -84,10 +97,13 @@ export const CreateTaskForm: FC = (): ReactElement => {
                 label: Status.inProgress.toUpperCase(),
               },
             ]}
+            
           />
           <TaskSelectField
             label="Priority"
             name="priority"
+            value={states.priority}
+            onChange={handleSelectChange}
             items={[
               {
                 value: Priority.low,
@@ -117,9 +133,6 @@ export const CreateTaskForm: FC = (): ReactElement => {
           </Button>
         </Stack>
       </Stack>
-
-      {/*Task Status*/}
-      {/*Task Priority*/}
     </Box>
   );
 };

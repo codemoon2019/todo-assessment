@@ -10,6 +10,11 @@ import { TaskFooter } from './_taskFooter';
 import { TaskHeader } from './_taskHeader';
 import { renderPriorityBorderColor } from './helpers/renderPriorityBorderColor';
 
+import {setTodoStatus } from "../../redux/todoSlice";
+
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux/store";
+
 export const Task: FC<ITask> = (props): ReactElement => {
   //  Destructure props
   const {
@@ -18,9 +23,21 @@ export const Task: FC<ITask> = (props): ReactElement => {
     description = 'Lorem ipsum dolor sit amet',
     priority = Priority.normal,
     status = Status.completed,
-    onStatusChange = (e) => console.log(e),
-    onClick = (e) => console.log(e),
+    id="id"
   } = props;
+
+  const StatusChangeHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
+    let new_status:string;
+    e.target.checked ? new_status = Status.inProgress : new_status=Status.todo
+    dispatch(setTodoStatus({status:new_status,id:id}))
+  }
+
+  const HandleClick =() =>{
+    dispatch(setTodoStatus({status:Status.completed,id:id}))
+  }
+
+
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <Box
@@ -41,19 +58,20 @@ export const Task: FC<ITask> = (props): ReactElement => {
       <TaskHeader title={title} date={date} />
       <TaskDescription description={description} />
       <TaskFooter
-        onClick={onClick}
-        onStatusChange={onStatusChange}
+        
+        status={status}
+        onClick={HandleClick}
+        onStatusChange={StatusChangeHandler}
       />
     </Box>
   );
 };
 
 Task.propTypes = {
+  id:PropTypes.string,
   title: PropTypes.string,
   date: PropTypes.instanceOf(Date),
   description: PropTypes.string,
-  onStatusChange: PropTypes.func,
-  onClick: PropTypes.func,
   priority: PropTypes.string,
   status: PropTypes.string,
 };
